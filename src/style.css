@@ -4,5 +4,94 @@
 
 body {
   margin: 0;
-  font-family: 'Karla', sans-serif;
+  background: #F5F7FB;
+}
+
+.blobs-yellow {
+  position: absolute;
+  top: 0;
+  right: 0;
+}
+
+.blobs-blue {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+}
+
+.start {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+}
+
+.start > h2 {
+  width: 412px;
+  height: 41px;
+  font-family: 'Karla';
+  font-weight: 700;
+  font-size: 31.25px;
+  line-height: 37px;
+  text-align: center;
+  color: #293264;
+  margin-top: 0;
+  margin-bottom: 7px;
+}
+
+.start > p {
+  width: 318px;
+  height: 19px;
+  font-family: 'Inter';
+  font-weight: 400;
+  font-size: 16px;
+  line-height: 19px;
+  text-align: center;
+  color: #293264;
+  margin-top: 0;
+  margin-bottom: 25px;
+}
+
+.start > label {
+  width: 318px;
+  height: 15px;
+  font-family: 'Inter';
+  font-weight: bold;
+  font-size: 16px;
+  line-height: 19px;
+  text-align: center;
+  color: #293264;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.start > select {
+  width: 350px;
+  height: 30px;
+  font-family: 'Inter';
+  font-weight: 400;
+  font-size: 16px;
+  background-color: #D6DBF5;
+  color: #293264;
+  border-radius: 10px;
+  margin-top: 0;
+  margin-bottom: 30px;
+}
+
+.start > button {
+  width: 193px;
+  height: 52px;
+  background: #4D5B9E;
+  border-radius: 15px;
+  border: none;
+  font-family: 'Inter';
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 19px;
+  text-align: center;
+  color: #F5F7FB;
+  cursor: pointer;
 }
