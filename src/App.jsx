@@ -19,6 +19,13 @@ export default function App() {
         return Math.floor(Math.random() * 4)
     }
 
+    // https://tertiumnon.medium.com/js-how-to-decode-html-entities-8ea807a140e5
+    function decodeHTMLEntities(text) {
+        var textArea = document.createElement('textarea')
+        textArea.innerHTML = text
+        return textArea.value
+    }
+
     React.useEffect(() => {
         async function getCategory() {
             const response = await fetch("https://opentdb.com/api_category.php")
@@ -30,7 +37,7 @@ export default function App() {
 
     React.useEffect(() => {
         async function getQuestionAnswer() {
-            const response = await fetch(`https://opentdb.com/api.php?amount=5${categoryId? "" : `&category=${categoryId}`}&type=multiple&encode=base64`)
+            const response = await fetch(`https://opentdb.com/api.php?amount=5${categoryId? "" : `&category=${categoryId}`}&type=multiple`)
             const data = await response.json()
             setQuestionAnswer(data.results.map(result => { 
                 const option = result.incorrect_answers
@@ -38,9 +45,9 @@ export default function App() {
                 return (
                     {
                         questionId: nanoid(),
-                        question: atob(result.question),
-                        options: option.map(opt => atob(opt)),
-                        answer: atob(result.correct_answer)
+                        question: decodeHTMLEntities(result.question),
+                        options: option.map(opt => decodeHTMLEntities(opt)),
+                        answer: decodeHTMLEntities(result.correct_answer)
                     }
                 )
             }))
