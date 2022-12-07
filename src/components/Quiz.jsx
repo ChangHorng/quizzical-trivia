@@ -14,9 +14,13 @@ export default function Quiz(props) {
     ))
     
     return (
-        <div className="quiz">
-            {question}
-            <button className="quiz-check">Check answers</button>
+        <div>
+            <img src="/images/blobs-yellow-small.png" className="blobs-yellow"/>
+            <div className="quiz">
+                {question}
+                <button className="quiz-check">Check answers</button>
+            </div>
+            <img src="/images/blobs-blue-small.png" className="blobs-blue"/>
         </div>
     )
 }

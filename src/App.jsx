@@ -59,7 +59,6 @@ export default function App() {
 
     return (
         <div>
-            <img src="/images/blobs-yellow.png" className="blobs-yellow"/>
             { start ?
                 <Quiz 
                     questionAnswer={questionAnswer}
@@ -72,7 +71,6 @@ export default function App() {
                     startQuiz={startQuiz}
                 />
             }
-            <img src="/images/blobs-blue.png" className="blobs-blue"/>
         </div>
     )
 }
