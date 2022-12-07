@@ -1,5 +1,7 @@
 import React from "react"
 import Start from "./components/Start"
+import Quiz from "./components/Quiz"
+import { nanoid } from "nanoid"
 
 export default function App() {
 
@@ -10,6 +12,8 @@ export default function App() {
     const[questionAnswer, setQuestionAnswer] = React.useState([])
 
     const[start, setStart] = React.useState(false)
+
+    const[selectedAnswer, setSelectedAnswer] = React.useState([])
 
     function randomNumber() {
         return Math.floor(Math.random() * 4)
@@ -26,16 +30,17 @@ export default function App() {
 
     React.useEffect(() => {
         async function getQuestionAnswer() {
-            const response = await fetch(`https://opentdb.com/api.php?amount=5${categoryId? "" : `&category=${categoryId}`}&type=multiple`)
+            const response = await fetch(`https://opentdb.com/api.php?amount=5${categoryId? "" : `&category=${categoryId}`}&type=multiple&encode=base64`)
             const data = await response.json()
             setQuestionAnswer(data.results.map(result => { 
                 const option = result.incorrect_answers
                 option.splice(randomNumber(), 0, result.correct_answer)
                 return (
                     {
-                        question: result.question,
-                        options: option,
-                        answer: result.correct_answer
+                        questionId: nanoid(),
+                        question: atob(result.question),
+                        options: option.map(opt => atob(opt)),
+                        answer: atob(result.correct_answer)
                     }
                 )
             }))
@@ -56,7 +61,10 @@ export default function App() {
         <div>
             <img src="/images/blobs-yellow.png" className="blobs-yellow"/>
             { start ?
-                <></> :
+                <Quiz 
+                    questionAnswer={questionAnswer}
+                /> 
+                :
                 <Start 
                     allCategory={allCategory}
                     categoryId={categoryId}
