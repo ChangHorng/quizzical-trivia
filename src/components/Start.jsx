@@ -23,7 +23,7 @@ export default function Start(props) {
                 {categoryLookup}
             </select>
             <br/>
-            <button>
+            <button onClick={props.startQuiz}>
                 Start quiz
             </button>
         </div>
