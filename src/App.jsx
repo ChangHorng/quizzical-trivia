@@ -46,7 +46,12 @@ export default function App() {
                     {
                         questionId: nanoid(),
                         question: decodeHTMLEntities(result.question),
-                        options: option.map(opt => decodeHTMLEntities(opt)),
+                        options: option.map(opt => { return (
+                            {
+                                optionId: nanoid(),
+                                option: decodeHTMLEntities(opt)
+                            }
+                        )}),
                         answer: decodeHTMLEntities(result.correct_answer)
                     }
                 )
@@ -54,7 +59,23 @@ export default function App() {
         }
         getQuestionAnswer()
     }, [categoryId])
-    
+
+    React.useEffect(() => {
+        setSelectedAnswer(questionAnswer.map(quesAns => { return (
+            {
+                questionId: quesAns.questionId,
+                options: quesAns.options.map(option => {
+                    return (
+                        {
+                            optionId: option.optionId,
+                            selected: false
+                        }
+                    )
+                })
+            }
+        )}))
+    }, [questionAnswer])
+
     function handleCategoryChange(event) {
         const {value} = event.target
         setCategoryId(value)
@@ -64,11 +85,28 @@ export default function App() {
         setStart(prevStart => !prevStart)
     }
 
+    function updateSelectedAnswer(quesId, optId) {
+        setSelectedAnswer(prevAns => prevAns.map(ans => {
+            return ans.questionId == quesId? 
+                {
+                    ...ans,
+                    options: (ans.options.map(option => {
+                        return option.optionId == optId? 
+                            {...option, selected: true} : 
+                            {...option, selected: false}
+                        }))
+                } : 
+                ans 
+        }))
+    }
+
     return (
         <div>
             { start ?
                 <Quiz 
                     questionAnswer={questionAnswer}
+                    selectedAnswer={selectedAnswer}
+                    updateSelectedAnswer={updateSelectedAnswer}
                 /> 
                 :
                 <Start 

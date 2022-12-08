@@ -1,14 +1,26 @@
 import React from "react"
 
 export default function Quiz(props) {
-    
+
+    function findQuestionOptionSelection(quesId, optId) {
+        const optionsList = props.selectedAnswer.filter(ques => ques.questionId == quesId)
+        const option = optionsList[0].options.filter(opt => opt.optionId == optId)
+        return option[0].selected
+    }
+
     const question = props.questionAnswer.map(question => (
         <div className="question">
             <h3>{question.question}</h3>
-            <button>{question.options[0]}</button>
-            <button>{question.options[1]}</button>
-            <button>{question.options[2]}</button>
-            <button>{question.options[3]}</button>
+            {
+                question.options.map(option => (
+                    <button
+                        className={`question-button ${findQuestionOptionSelection(question.questionId, option.optionId)? "selected" : ""}`}
+                        onClick={() => props.updateSelectedAnswer(question.questionId, option.optionId)}
+                    >
+                        {option.option}
+                    </button>
+                ))
+            }
             <hr />
         </div> 
     ))
