@@ -11,19 +11,19 @@ export default function App() {
 
     const[questionAnswer, setQuestionAnswer] = React.useState([])
 
-    const[start, setStart] = React.useState(false)
-
     const[selectedAnswer, setSelectedAnswer] = React.useState([])
 
     const[score, setScore] = React.useState(0)
 
+    const[start, setStart] = React.useState(false)    
+
     const[checkAnswer, setCheckAnswer] = React.useState(false)
 
-    function randomNumber() {
+    function randomNumber0To3() {
         return Math.floor(Math.random() * 4)
     }
 
-    // https://tertiumnon.medium.com/js-how-to-decode-html-entities-8ea807a140e5
+    // Refer from https://tertiumnon.medium.com/js-how-to-decode-html-entities-8ea807a140e5
     function decodeHTMLEntities(text) {
         var textArea = document.createElement('textarea')
         textArea.innerHTML = text
@@ -41,16 +41,18 @@ export default function App() {
 
     React.useEffect(() => {
         async function getQuestionAnswer() {
-            const response = await fetch(`https://opentdb.com/api.php?amount=5${categoryId? `&category=${categoryId}` : ""}&type=multiple`)
+            const response = await fetch(
+                `https://opentdb.com/api.php?amount=5${categoryId? `&category=${categoryId}` : ""}&type=multiple`
+            )
             const data = await response.json()
             setQuestionAnswer(data.results.map(result => { 
-                const option = result.incorrect_answers
-                option.splice(randomNumber(), 0, result.correct_answer)
+                const resultOption = result.incorrect_answers
+                resultOption.splice(randomNumber0To3(), 0, result.correct_answer)
                 return (
                     {
                         questionId: nanoid(),
                         question: decodeHTMLEntities(result.question),
-                        options: option.map(opt => { return (
+                        options: resultOption.map(opt => { return (
                             {
                                 optionId: nanoid(),
                                 option: decodeHTMLEntities(opt)
@@ -68,15 +70,13 @@ export default function App() {
         setSelectedAnswer(questionAnswer.map(quesAns => { return (
             {
                 questionId: quesAns.questionId,
-                options: quesAns.options.map(option => {
-                    return (
-                        {
-                            optionId: option.optionId,
-                            selected: false,
-                            answer: quesAns.answer == option.option ? true : false
-                        }
-                    )
-                })
+                options: quesAns.options.map(opt => { return (
+                    {
+                        optionId: opt.optionId,
+                        selected: false,
+                        answer: quesAns.answer == opt.option ? true : false
+                    }
+                )})
             }
         )}))
     }, [questionAnswer])
@@ -91,34 +91,36 @@ export default function App() {
     }
 
     function updateSelectedAnswer(quesId, optId) {
-        setSelectedAnswer(prevAns => prevAns.map(ans => {
-            return ans.questionId == quesId? 
+        setSelectedAnswer(prevAns => prevAns.map(ans => { return (
+            ans.questionId == quesId? 
                 {
                     ...ans,
-                    options: (ans.options.map(option => {
-                        return option.optionId == optId? 
-                            {...option, selected: true} : 
-                            {...option, selected: false}
-                        }))
-                } : 
+                    options: ans.options.map(opt => { return (
+                        opt.optionId == optId? 
+                            {...opt, selected: true} 
+                            : 
+                            {...opt, selected: false}
+                    )})
+                } 
+                : 
                 ans 
-        }))
+        )}))
     }
 
     function updateScore_checkAnswer() {
-        const scores = selectedAnswer.map(question => (
-            question.options.map(option => 
-                option.selected && option.answer ? 1 : 0
-            )
-        ))
-        
         let score = 0
+
+        const scores = selectedAnswer.map(ques => 
+            ques.options.map(opt => 
+                opt.selected && opt.answer ? 1 : 0
+            )
+        )
+        
         for (let i=0; i<scores.length; i++) {
             score += scores[i].reduce((partialSum, x) => partialSum + x, 0)
         }
         
         setScore(score)
-
         setCheckAnswer(prevCheckAnswer => !prevCheckAnswer)
     }
 
@@ -127,8 +129,8 @@ export default function App() {
         setQuestionAnswer([])
         setSelectedAnswer([])
         setScore(0)
-        setCheckAnswer(prevCheckAnswer => !prevCheckAnswer)
         setStart(prevStart => !prevStart)
+        setCheckAnswer(prevCheckAnswer => !prevCheckAnswer)
     }
 
     return (
@@ -137,9 +139,9 @@ export default function App() {
                 <Quiz 
                     questionAnswer={questionAnswer}
                     selectedAnswer={selectedAnswer}
-                    updateSelectedAnswer={updateSelectedAnswer}
                     score={score}
                     checkAnswer={checkAnswer}
+                    updateSelectedAnswer={updateSelectedAnswer}
                     updateScore_checkAnswer={updateScore_checkAnswer}
                     playAgain={playAgain}
                 /> 
