@@ -15,6 +15,10 @@ export default function App() {
 
     const[selectedAnswer, setSelectedAnswer] = React.useState([])
 
+    const[score, setScore] = React.useState(0)
+
+    const[checkAnswer, setCheckAnswer] = React.useState(false)
+
     function randomNumber() {
         return Math.floor(Math.random() * 4)
     }
@@ -37,7 +41,7 @@ export default function App() {
 
     React.useEffect(() => {
         async function getQuestionAnswer() {
-            const response = await fetch(`https://opentdb.com/api.php?amount=5${categoryId? "" : `&category=${categoryId}`}&type=multiple`)
+            const response = await fetch(`https://opentdb.com/api.php?amount=5${categoryId? `&category=${categoryId}` : ""}&type=multiple`)
             const data = await response.json()
             setQuestionAnswer(data.results.map(result => { 
                 const option = result.incorrect_answers
@@ -68,7 +72,8 @@ export default function App() {
                     return (
                         {
                             optionId: option.optionId,
-                            selected: false
+                            selected: false,
+                            answer: quesAns.answer == option.option ? true : false
                         }
                     )
                 })
@@ -100,6 +105,32 @@ export default function App() {
         }))
     }
 
+    function updateScore_checkAnswer() {
+        const scores = selectedAnswer.map(question => (
+            question.options.map(option => 
+                option.selected && option.answer ? 1 : 0
+            )
+        ))
+        
+        let score = 0
+        for (let i=0; i<scores.length; i++) {
+            score += scores[i].reduce((partialSum, x) => partialSum + x, 0)
+        }
+        
+        setScore(score)
+
+        setCheckAnswer(prevCheckAnswer => !prevCheckAnswer)
+    }
+
+    function playAgain() {
+        setCategoryId(0)
+        setQuestionAnswer([])
+        setSelectedAnswer([])
+        setScore(0)
+        setCheckAnswer(prevCheckAnswer => !prevCheckAnswer)
+        setStart(prevStart => !prevStart)
+    }
+
     return (
         <div>
             { start ?
@@ -107,6 +138,10 @@ export default function App() {
                     questionAnswer={questionAnswer}
                     selectedAnswer={selectedAnswer}
                     updateSelectedAnswer={updateSelectedAnswer}
+                    score={score}
+                    checkAnswer={checkAnswer}
+                    updateScore_checkAnswer={updateScore_checkAnswer}
+                    playAgain={playAgain}
                 /> 
                 :
                 <Start 

@@ -15,7 +15,7 @@ export default function Quiz(props) {
                 question.options.map(option => (
                     <button
                         className={`question-button ${findQuestionOptionSelection(question.questionId, option.optionId)? "selected" : ""}`}
-                        onClick={() => props.updateSelectedAnswer(question.questionId, option.optionId)}
+                        onClick={!props.checkAnswer && (() => props.updateSelectedAnswer(question.questionId, option.optionId))}
                     >
                         {option.option}
                     </button>
@@ -30,7 +30,13 @@ export default function Quiz(props) {
             <img src="/images/blobs-yellow-small.png" className="blobs-yellow"/>
             <div className="quiz">
                 {question}
-                <button className="quiz-check">Check answers</button>
+                {props.checkAnswer? <p>You scored {props.score}/5 correct answers</p> : <></>}
+                <button 
+                    className="quiz-check"
+                    onClick={props.checkAnswer? props.playAgain : props.updateScore_checkAnswer}
+                >
+                    {props.checkAnswer ? "Play again" : "Check answers"}
+                </button>
             </div>
             <img src="/images/blobs-blue-small.png" className="blobs-blue"/>
         </div>
