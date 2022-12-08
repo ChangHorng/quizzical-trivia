@@ -123,7 +123,7 @@ export default function App() {
     }
 
     function playAgain() {
-        setCategoryId(0)
+        setCategoryId(prevCategoryId => prevCategoryId? 0 : 9)
         setQuestionAnswer([])
         setSelectedAnswer([])
         setScore(0)
