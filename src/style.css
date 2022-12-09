@@ -107,7 +107,7 @@ body {
 /* Quiz Page */
 
 .quiz {
-  width: 399px;
+  max-width: 399px;
   display: flex;
   flex-direction: column;
   margin-left: auto;
