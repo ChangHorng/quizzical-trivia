@@ -47,7 +47,7 @@ export default function Quiz(props) {
                     <button
                         className={
                             `question-button 
-                            ${!props.selectedAnswer && findQuestionOption(ques.questionId, opt.optionId)? 
+                            ${props.questionAnswer && findQuestionOption(ques.questionId, opt.optionId)? 
                                 "button-selected" : ""}
                             ${props.checkAnswer? 
                                 resultButton(ques.questionId, opt.optionId) : ""}`
