@@ -2,6 +2,7 @@ import React from "react"
 
 export default function Start(props) {
     
+    // Show all possible category from API
     const categoryList = props.allCategory.map(category =>
         <option value={category.id}>
             {category.name}

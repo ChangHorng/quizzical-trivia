@@ -5,20 +5,26 @@ import { nanoid } from "nanoid"
 
 export default function App() {
 
+    // Store all possible category from API
     const[allCategory, setAllCategory] = React.useState([])
 
+    // Store category id that choose by user for requesting question purpose
     const[categoryId, setCategoryId] = React.useState(0)
 
+    // Store all the questions, options and answers 
     const[questionAnswer, setQuestionAnswer] = React.useState([])
 
+    // Store answer for each question that choose by user
     const[selectedAnswer, setSelectedAnswer] = React.useState([])
 
+    // Store score for all the question's answer
     const[score, setScore] = React.useState(0)
 
     const[start, setStart] = React.useState(false)    
 
     const[checkAnswer, setCheckAnswer] = React.useState(false)
 
+    // Helper function for fetching API
     function randomNumber0To3() {
         return Math.floor(Math.random() * 4)
     }
@@ -30,6 +36,7 @@ export default function App() {
         return textArea.value
     }
 
+    // Request all category from API once
     React.useEffect(() => {
         async function getCategory() {
             const response = await fetch("https://opentdb.com/api_category.php")
@@ -39,6 +46,7 @@ export default function App() {
         getCategory()
     }, [])
 
+    // Request questions, options and answers from API based on user options
     React.useEffect(() => {
         async function getQuestionAnswer() {
             const response = await fetch(
@@ -66,6 +74,7 @@ export default function App() {
         getQuestionAnswer()
     }, [categoryId])
 
+    // Set initial user's answer for each question (All to false)
     React.useEffect(() => {
         setSelectedAnswer(questionAnswer.map(quesAns => { return (
             {
